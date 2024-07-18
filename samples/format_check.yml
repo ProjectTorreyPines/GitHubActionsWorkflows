@@ -1,0 +1,16 @@
+name: Format Check
+
+on:
+  push:
+    branches: ["master", "dev", "format"]
+    paths:
+      - '.github/workflows/format_check.yml'
+      - '**.jl'
+  pull_request:
+    branches: ["master", "dev"]
+    paths:
+      - '.github/workflows/format_check.yml'
+      - '**.jl'
+jobs:
+  format_check: 
+    uses: ProjectTorreyPines/workflows/workflows/format_check.yml@master

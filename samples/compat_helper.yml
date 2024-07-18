@@ -1,0 +1,8 @@
+name: CompatHelper
+on:
+  schedule:
+    - cron: '37 3 * * *'
+  workflow_dispatch:
+jobs:
+  CompatHelper:
+    uses: ProjectTorreyPines/workflows/workflows/compat_helper.yml@master
