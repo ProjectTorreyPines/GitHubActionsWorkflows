@@ -3,6 +3,7 @@ on:
   workflow_call:
 jobs:
   CompatHelper:
+    name: Compat Helper
     runs-on: ubuntu-latest
     steps:
       - name: "Add the FuseRegistry via Git"

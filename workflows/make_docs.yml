@@ -4,11 +4,11 @@ on:
     
 jobs:
   make_docs:
+    name: Documentation
     permissions:
       actions: write
       contents: write
       statuses: write
-    name: Documentation
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

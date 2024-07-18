@@ -12,12 +12,12 @@ on:
         default: None
         type: string
 
-permissions:
-  actions: write
-  contents: read
-
 jobs:
   test:
+    name: Test
+    permissions:
+      actions: write
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -51,7 +51,8 @@ jobs:
         if: ${{ inputs.artifact_name != 'None' || inputs.artifact_path != 'None' }}
         uses: actions/upload-artifact@v4
         with:
-          name: test_result_images
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.artifact_path }}
       # Not set up yet
       # - uses: julia-actions/julia-processcoverage@v1
       # - uses: codecov/codecov-action@v4
