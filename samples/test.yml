@@ -16,10 +16,6 @@ on:
       - 'test/**'
       - 'Project.toml'
 
-permissions:
-  actions: write
-  contents: read
-
 jobs:
   test:
     uses: ProjectTorreyPines/workflows/workflows/test.yml@master

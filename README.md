@@ -3,6 +3,8 @@ Central repository to store workflows used by some of the project repositories.
 
 ## Available workflows:
 
+All workflows currently use latest julia subversion of v1 and run on x64 architecture in ubuntu-latest image.
+
 ### 1. **Compat Helper**
 Installs compat helper which checks for updates in dependencies based on compat entries in `Project.toml` and sends a PR to dev branch if a dependency has updated version available.
 * Typically used with cron schedule, called from master branch.
