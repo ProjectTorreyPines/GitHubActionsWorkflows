@@ -1,4 +1,4 @@
-# workflows
+# GitHub Actions Workflows
 Central repository to store workflows used by some of the project repositories.
 
 ## Available workflows:

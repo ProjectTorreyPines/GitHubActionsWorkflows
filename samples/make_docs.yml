@@ -20,4 +20,4 @@ on:
     
 jobs:
   make_docs:
-    uses: ProjectTorreyPines/workflows/workflows/make_docs.yml@master
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/workflows/make_docs.yml@master
