@@ -30,7 +30,7 @@ Uses  [https://github.com/julia-actions/julia-runtest](https://github.com/JuliaD
 * Your repo must have following 4 secret variables with the exact same name as described below:
   * `DVC_KNOWN_HOSTS` : know_hosts entry lines for cybele, omega, and iris.
   * `DVC_SSH_CONFIG`: ssh config entries for cybele, iris, and omega with username, port, and proxy command.
-  * `DVC_SSH_KEY`: Private rsa ssh key whose public part has been added to `omega:/home/username/.ssh/authorized_keys`.
+  * `DVC_SSH_KEY`: Private rsa ssh key whose public part has been added to `cybele:/home/username/.ssh/authorized_keys`, and similarly to omega and iris.
   * `SOLPSTESTSAMPLES_SSH_KEY`: Private rsa ssh key whose public part has been stored in Deploy Keys of SOLPSTestSamples repo.
 
 ## Samples
