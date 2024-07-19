@@ -13,4 +13,4 @@ on:
       - '**.jl'
 jobs:
   format_check: 
-    uses: ProjectTorreyPines/GitHubActionsWorkflows/workflows/format_check.yml@master
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/format_check.yml@master
