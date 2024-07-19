@@ -3,6 +3,10 @@ name: Test
 on:
   workflow_call:
     inputs:
+      upload_artifact:
+        required: false
+        default: false
+        type: boolean
       artifact_name:
         required: false
         default: None
@@ -11,6 +15,10 @@ on:
         required: false
         default: None
         type: string
+      use_dvc:
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   test:
@@ -29,17 +37,22 @@ jobs:
         with:
           version: ${{ matrix.julia-version }}
       - uses: actions/checkout@v4
-      - uses: webfactory/ssh-agent@v0.9.0
+      - name: Add SSH keys
+        if: ${{ inputs.use_dvc }}
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: |
             ${{ secrets.SOLPSTESTSAMPLES_SSH_KEY}}
             ${{ secrets.DVC_SSH_KEY }}
       - name: Configure ssh
+        if: ${{ inputs.use_dvc }}
         run: |
           echo "${{ secrets.DVC_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
           echo "${{ secrets.DVC_SSH_CONFIG }}" >> ~/.ssh/config
       - uses: iterative/setup-dvc@v1
+        if: ${{ inputs.use_dvc }}
       - name: DVC Pull
+        if: ${{ inputs.use_dvc }}
         run: |
           dvc pull
       - uses: julia-actions/cache@v1
@@ -48,7 +61,7 @@ jobs:
           julia --project=. -e 'using Pkg; Pkg.Registry.add(RegistrySpec(url="https://github.com/ProjectTorreyPines/FuseRegistry.jl.git")); Pkg.Registry.add("General")'
       - uses: julia-actions/julia-runtest@v1
       - name: 'Upload Artifact'
-        if: ${{ inputs.artifact_name != 'None' || inputs.artifact_path != 'None' }}
+        if: ${{ inputs.upload_artifact }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}

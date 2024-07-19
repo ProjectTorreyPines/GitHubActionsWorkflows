@@ -24,6 +24,15 @@ Uses  [https://github.com/julia-actions/julia-runtest](https://github.com/JuliaD
 * Typically used with PR and push to `master` and `dev`.
 * Good to set path specifier to reduce triggering to only `src/**`, `test/**`, and `Project.toml` changes.
 
+**Caution**: do the following steps only if you know what you are doing. Ask `guptaa@fusion.gat.com` for help if you need.:
+* For pulling the test sample files, this workflow will use `dvc` from [SOLPSTestSamples](https://github.com/ProjectTorreyPines/SOLPSTestSamples) repo.
+* This feature is on by default. If your testing does not require sample files from [SOLPSTestSamples](https://github.com/ProjectTorreyPines/SOLPSTestSamples), then turn this off by adding `use_dvc: false` in `with` field. See sample file for example.
+* Your repo must have following 4 secret variables with the exact same name as described below:
+  * `DVC_KNOWN_HOSTS` : know_hosts entry lines for cybele, omega, and iris.
+  * `DVC_SSH_CONFIG`: ssh config entries for cybele, iris, and omega with username, port, and proxy command.
+  * `DVC_SSH_KEY`: Private rsa ssh key whose public part has been added to `omega:/home/username/.ssh/authorized_keys`.
+  * `SOLPSTESTSAMPLES_SSH_KEY`: Private rsa ssh key whose public part has been stored in Deploy Keys of SOLPSTestSamples repo.
+
 ## Samples
 
 You can copy workflow files from [samples](https://github.com/ProjectTorreyPines/workflows/tree/master/samples) directory to your project repo's `.github/workflows/` directory to get started with default settings. Nothing else should be required to do.
