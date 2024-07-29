@@ -57,10 +57,12 @@ jobs:
           dvc pull
       - uses: julia-actions/cache@v1
       - name: "Add the FuseRegistry via Git"
+        env:
+          PTP_READ_TOKEN: ${{ secrets.PTP_READ_TOKEN }}
         run: |
           rm -rf ~/.julia/registries/FuseRegistry
           julia -e 'using Pkg; Pkg.Registry.add(RegistrySpec(url="https://github.com/ProjectTorreyPines/FuseRegistry.jl.git")); Pkg.Registry.add("General")'
-          find ~/.julia/registries/FuseRegistry -type f -name 'Package.toml' -exec sed -i 's|git@github.com:|https://project-torrey-pines:${{secrets.PTP_READ_TOKEN}}@github.com/|g' {} +
+          find ~/.julia/registries/FuseRegistry -type f -name 'Package.toml' -exec sed -i "s|git@github.com:|https://project-torrey-pines:$PTP_READ_TOKEN@github.com/|g" {} +
       - uses: julia-actions/julia-runtest@v1
       - name: 'Upload Artifact'
         if: ${{ inputs.upload_artifact }}
