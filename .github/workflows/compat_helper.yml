@@ -8,10 +8,10 @@ jobs:
     steps:
       - name: "Add the FuseRegistry via Git"
         run: |
-          using Pkg
-          Pkg.Registry.add(RegistrySpec(url="https://github.com/ProjectTorreyPines/FuseRegistry.jl.git"))
-          Pkg.Registry.add("General")
-        shell: julia --color=yes {0}
+          julia -e 'using Pkg; Pkg.Registry.add(RegistrySpec(url="https://github.com/ProjectTorreyPines/FuseRegistry.jl.git")); Pkg.Registry.add("General")'
+      - name: "Replace git@github.com with https in FuseRegistry Package.toml files"
+        run: |
+          find ~/.julia/registries/FuseRegistry -type f -name 'Package.toml' -exec sed -i 's|git@github.com:|https://project-torrey-pines:${{secrets.PTP_READ_TOKEN}}@github.com/|g' {} +
       - name: Pkg.add("CompatHelper")
         run: julia -e 'using Pkg; Pkg.add("CompatHelper")'
       - name: CompatHelper.main()
