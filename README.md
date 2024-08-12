@@ -20,18 +20,23 @@ Uses [Documenter](https://github.com/JuliaDocs/Documenter.jl) to test if documen
 * Good to set path specifier to reduce triggering to only `src/**` and `docs/**` changes.
 
 ### 4. **TEST**
-Uses  [https://github.com/julia-actions/julia-runtest](https://github.com/JuliaDocs/Documenter.jl) to run `test/runtests.jl`
+Uses  [https://github.com/julia-actions/julia-runtest](https://github.com/julia-actions/julia-runtest) to run `test/runtests.jl`
 * Typically used with PR and push to `master` and `dev`.
 * Good to set path specifier to reduce triggering to only `src/**`, `test/**`, and `Project.toml` changes.
-
-**Caution**: do the following steps only if you know what you are doing. Ask `guptaa@fusion.gat.com` for help if you need.:
-* For pulling the test sample files, this workflow will use `dvc` from [SOLPSTestSamples](https://github.com/ProjectTorreyPines/SOLPSTestSamples) repo.
-* This feature is on by default. If your testing does not require sample files from [SOLPSTestSamples](https://github.com/ProjectTorreyPines/SOLPSTestSamples), then turn this off by adding `use_dvc: false` in `with` field. See sample file for example.
-* Your repo must have following 4 secret variables with the exact same name as described below:
-  * `DVC_KNOWN_HOSTS` : know_hosts entry lines for cybele, omega, and iris.
-  * `DVC_SSH_CONFIG`: ssh config entries for cybele, iris, and omega with username, port, and proxy command.
-  * `DVC_SSH_KEY`: Private rsa ssh key whose public part has been added to `cybele:/home/username/.ssh/authorized_keys`, and similarly to omega and iris.
-  * `SOLPSTESTSAMPLES_SSH_KEY`: Private rsa ssh key whose public part has been stored in Deploy Keys of SOLPSTestSamples repo.
+* Options:
+  * `upload_artifact`: If set to `true`, following arguments are required to upload test artifacts for later reference:
+    * `artifact_name`: String for the displayed name of artifact.
+    * `artifact_path`: Path from root where artifacts appear after test.
+  * `use_coverage`: If set to `true`, coverage report is uploaded on codecov. Follow instructions at [https://app.codecov.io/gh/ProjectTorreyPines/<repo_name>/new](https://app.codecov.io/gh/ProjectTorreyPines/<repo_name>/new) to add `CODECOV_TOKEN` GitHub Actions secret.
+  * `use_dvc`: If set to `true`, `dvc` will be installed to pull sample files. Default is `true`. Additional GitHub Action secrets are assumed to be present in the repo as described below.
+  **(Caution: do the following steps only if you know what you are doing. Ask `guptaa@fusion.gat.com` for help if you need)**:
+    * For pulling the test sample files, this workflow will use `dvc` from [SOLPSTestSamples](https://github.com/ProjectTorreyPines/SOLPSTestSamples) repo.
+    * This feature is on by default. If your testing does not require sample files from [SOLPSTestSamples](https://github.com/ProjectTorreyPines/SOLPSTestSamples), then turn this off by adding `use_dvc: false` in `with` field. See sample file for example.
+    * Your repo must have following 4 secret variables with the exact same name as described below:
+      * `DVC_KNOWN_HOSTS` : know_hosts entry lines for cybele, omega, and iris.
+      * `DVC_SSH_CONFIG`: ssh config entries for cybele, iris, and omega with username, port, and proxy command.
+      * `DVC_SSH_KEY`: Private rsa ssh key whose public part has been added to `cybele:/home/username/.ssh/authorized_keys`, and similarly to omega and iris.
+      * `SOLPSTESTSAMPLES_SSH_KEY`: Private rsa ssh key whose public part has been stored in Deploy Keys of SOLPSTestSamples repo.
 
 ## Samples
 
