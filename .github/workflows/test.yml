@@ -19,6 +19,10 @@ on:
         required: false
         default: true
         type: boolean
+      use_coverage:
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   test:
@@ -66,8 +70,11 @@ jobs:
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ inputs.artifact_path }}
-      # Not set up yet
-      # - uses: julia-actions/julia-processcoverage@v1
-      # - uses: codecov/codecov-action@v4
-      #   with:
-      #     files: lcov.info
+      - name: 'Process Coverage'
+        if: ${{ inputs.use_coverage }}
+        uses: julia-actions/julia-processcoverage@v1
+      - name: 'Upload Coverage'
+        if: ${{ inputs.use_coverage }}
+        uses: codecov/codecov-action@v4
+        with:
+          files: lcov.info
