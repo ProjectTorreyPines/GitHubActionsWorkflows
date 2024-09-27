@@ -11,5 +11,3 @@ on:
 jobs:
   test:
     uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/reg_updated_pkg_ver.yml@master
-    with:
-      issue_number: 73 # Add an issue in your repo dedicated to sending these automated package update comments

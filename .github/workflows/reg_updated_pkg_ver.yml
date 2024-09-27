@@ -13,6 +13,8 @@ jobs:
     steps:
         - name: Checkout repo
           uses: actions/checkout@v4
+          with:
+            fetch-depth: 2
         - name: Check if package version updated in last commit
           run: |
             if [[ ${{ github.event_name }} == 'pull_request' ]]; then
@@ -22,14 +24,13 @@ jobs:
               last_sha=${{ github.event.before }}
             fi
             changes=$(git diff $last_sha $GITHUB_SHA -- Project.toml | grep version)
-            if [[ "$changes" != "" ]]; then
-               version_updated=true
-            else
+            if [[ "$changes" == "" ]]; then
                version_updated=false
+            else
+               version_updated=true
             fi
         - name: Create @JuliaRegistrator register() comment
           if: ${{ env.version_updated }}
-          uses: peter-evans/create-or-update-comment@v4
+          uses: peter-evans/commit-comment@v3
           with:
-            issue-number: ${{ inputs.issue_number }}
             body: "@something something()" # "@JuliaRegistrator register()"
