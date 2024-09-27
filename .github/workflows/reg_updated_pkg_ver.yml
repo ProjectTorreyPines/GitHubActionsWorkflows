@@ -1,0 +1,35 @@
+name: Register updated version with Julia Registry
+
+on:
+  workflow_call:
+    inputs:
+        issue_number:
+            required: true
+            type: number
+
+jobs:
+  reg_updated_pkg_ver:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
+        - name: Check if package version updated in last commit
+          run: |
+            if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+              last_sha=${{ github.event.pull_request.base.sha }}
+            fi
+            if [[ ${{ github.event_name }} == 'push' ]]; then
+              last_sha=${{ github.event.before }}
+            fi
+            changes=$(git diff $last_sha $GITHUB_SHA -- Project.toml | grep version)
+            if [[ "$changes" != "" ]]; then
+               version_updated=true
+            else
+               version_updated=false
+            fi
+        - name: Create @JuliaRegistrator register() comment
+          if: ${{ env.version_updated }}
+          uses: peter-evans/create-or-update-comment@v4
+          with:
+            issue-number: ${{ inputs.issue_number }}
+            body: "@something something()" # "@JuliaRegistrator register()"

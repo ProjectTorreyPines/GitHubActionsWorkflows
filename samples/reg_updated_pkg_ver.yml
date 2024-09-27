@@ -1,0 +1,15 @@
+name: Register updated version with Julia Registry
+
+on:
+  push:
+    branches: master
+    paths: Project.toml
+  pull_request:
+    branches: master
+    paths: Project.toml
+
+jobs:
+  test:
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/reg_updated_pkg_ver.yml@master
+    with:
+      issue_number: 73 # Add an issue in your repo dedicated to sending these automated package update comments
