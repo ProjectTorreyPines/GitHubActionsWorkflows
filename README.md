@@ -38,6 +38,9 @@ Uses  [https://github.com/julia-actions/julia-runtest](https://github.com/julia-
       * `DVC_SSH_KEY`: Private rsa ssh key whose public part has been added to `cybele:/home/username/.ssh/authorized_keys`, and similarly to omega and iris.
       * `SOLPSTESTSAMPLES_SSH_KEY`: Private rsa ssh key whose public part has been stored in Deploy Keys of SOLPSTestSamples repo.
 
+### 5. **Register updated version with Julia Registry**
+Uses [https://github.com/peter-evans/commit-comment](https://github.com/peter-evans/commit-comment) to add `@JuliaRegistrator register()` comment to the commit that causes a change in version number in root directory's `Project.toml` file.
+
 ## Samples
 
 You can copy workflow files from [samples](https://github.com/ProjectTorreyPines/workflows/tree/master/samples) directory to your project repo's `.github/workflows/` directory to get started with default settings. Nothing else should be required to do.
