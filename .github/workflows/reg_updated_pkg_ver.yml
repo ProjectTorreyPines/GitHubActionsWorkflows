@@ -36,7 +36,7 @@ jobs:
             fi
             echo $version_updated
         - name: Create @JuliaRegistrator register() comment
-          if: env.changes != ''
+          if: ${{env.changes}} != ''
           uses: peter-evans/commit-comment@v3
           with:
             body: "@something something()" # "@JuliaRegistrator register()"
