@@ -2,10 +2,6 @@ name: Register updated version with Julia Registry
 
 on:
   workflow_call:
-    inputs:
-        issue_number:
-            required: true
-            type: number
 
 jobs:
   reg_updated_pkg_ver:
@@ -18,16 +14,9 @@ jobs:
         - name: Check if package version updated in last commit
           id: check
           continue-on-error: true
-          run: |
-            if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-              last_sha=${{ github.event.pull_request.base.sha }}
-            fi
-            if [[ ${{ github.event_name }} == 'push' ]]; then
-              last_sha=${{ github.event.before }}
-            fi
-            git diff $last_sha $GITHUB_SHA -- Project.toml | grep version
+          run: git diff ${{ github.event.before }} $GITHUB_SHA -- Project.toml | grep version
         - name: Create @JuliaRegistrator register() comment
           if: steps.check.outcome != 'failure'
           uses: peter-evans/commit-comment@v3
           with:
-            body: "@something something()" # "@JuliaRegistrator register()"
+            body: "@JuliaRegistrator register()"
