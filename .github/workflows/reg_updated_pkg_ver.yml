@@ -23,12 +23,17 @@ jobs:
             if [[ ${{ github.event_name }} == 'push' ]]; then
               last_sha=${{ github.event.before }}
             fi
+            echo $last_sha
+            echo $GITHUB_SHA
+            git diff $last_sha $GITHUB_SHA -- Project.toml
             changes=$(git diff $last_sha $GITHUB_SHA -- Project.toml | grep version)
+            echo $changes
             if [[ "$changes" == "" ]]; then
                version_updated=false
             else
                version_updated=true
             fi
+            echo $version_updated
         - name: Create @JuliaRegistrator register() comment
           if: ${{ env.version_updated }}
           uses: peter-evans/commit-comment@v3
