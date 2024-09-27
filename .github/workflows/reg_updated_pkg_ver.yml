@@ -27,14 +27,8 @@ jobs:
             echo $last_sha
             echo $GITHUB_SHA
             git diff $last_sha $GITHUB_SHA -- Project.toml
+            changes=""
             changes=$(git diff $last_sha $GITHUB_SHA -- Project.toml | grep version)
-            echo $changes
-            if [[ "$changes" == "" ]]; then
-               version_updated=false
-            else
-               version_updated=true
-            fi
-            echo $version_updated
         - name: Create @JuliaRegistrator register() comment
           if: ${{env.changes}} != ''
           uses: peter-evans/commit-comment@v3
