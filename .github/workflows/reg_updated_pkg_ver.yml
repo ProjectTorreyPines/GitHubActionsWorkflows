@@ -16,6 +16,7 @@ jobs:
           with:
             fetch-depth: 2
         - name: Check if package version updated in last commit
+          continue-on-error: true
           run: |
             if [[ ${{ github.event_name }} == 'pull_request' ]]; then
               last_sha=${{ github.event.pull_request.base.sha }}
@@ -35,7 +36,7 @@ jobs:
             fi
             echo $version_updated
         - name: Create @JuliaRegistrator register() comment
-          if: ${{ env.version_updated }}
+          if: env.changes != ''
           uses: peter-evans/commit-comment@v3
           with:
             body: "@something something()" # "@JuliaRegistrator register()"
