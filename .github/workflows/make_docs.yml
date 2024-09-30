@@ -1,6 +1,11 @@
 name: Make Docs
 on:
   workflow_call:
+    inputs:
+      use_FuseRegistry:
+        required: false
+        default: true
+        type: boolean
     
 jobs:
   make_docs:
@@ -20,6 +25,7 @@ jobs:
       - uses: julia-actions/setup-julia@latest
       - uses: julia-actions/cache@v1
       - name: "Add the FuseRegistry via Git"
+        if: ${{ inputs.use_FuseRegistry }}
         run: |
           julia --project=docs/ -e 'using Pkg; Pkg.Registry.add(RegistrySpec(url="https://github.com/ProjectTorreyPines/FuseRegistry.jl.git")); Pkg.Registry.add("General")'
       - name: Install dependencies

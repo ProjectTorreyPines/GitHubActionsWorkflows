@@ -6,3 +6,6 @@ on:
 jobs:
   CompatHelper:
     uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/compat_helper.yml@master
+    # Optional input to diable use of FuseRegistry for installing dependencies
+    # with:
+    #   use_FuseRegistry: false

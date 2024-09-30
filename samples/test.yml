@@ -27,6 +27,9 @@ jobs:
     #   upload_artifact: true
     #   artifact_name: test_result_images
     #   artifact_path: test/*.png
+    # Optional input to diable use of FuseRegistry for installing dependencies
+    # with:
+    #   use_FuseRegistry: false
     # Optional input to diable use of dvc for downloading sample files
     # with:
     #   use_dvc: false

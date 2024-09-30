@@ -15,6 +15,10 @@ on:
         required: false
         default: None
         type: string
+      use_FuseRegistry:
+        required: false
+        default: true
+        type: boolean
       use_dvc:
         required: false
         default: true
@@ -61,6 +65,7 @@ jobs:
           dvc pull
       - uses: julia-actions/cache@v1
       - name: "Add the FuseRegistry via Git"
+        if: ${{ inputs.use_FuseRegistry }}
         run: |
           julia --project=. -e 'using Pkg; Pkg.Registry.add(RegistrySpec(url="https://github.com/ProjectTorreyPines/FuseRegistry.jl.git")); Pkg.Registry.add("General")'
       - uses: julia-actions/julia-runtest@v1
