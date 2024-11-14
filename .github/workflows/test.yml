@@ -63,7 +63,7 @@ jobs:
         if: ${{ inputs.use_dvc }}
         run: |
           dvc pull
-      - uses: julia-actions/cache@v1
+      - uses: julia-actions/cache@v2
       - name: "Add the FuseRegistry via Git"
         if: ${{ inputs.use_FuseRegistry }}
         run: |

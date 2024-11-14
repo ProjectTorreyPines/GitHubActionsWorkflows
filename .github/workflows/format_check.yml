@@ -16,12 +16,12 @@ jobs:
         with:
           version: ${{ matrix.julia-version }}
           arch: ${{ matrix.julia-arch }}
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Install JuliaFormatter and format
         run: |
           julia  -e 'using Pkg; Pkg.add(PackageSpec(name="JuliaFormatter"))'
           julia  -e 'using JuliaFormatter; format(".", verbose=true)'
-      - uses: julia-actions/cache@v1
+      - uses: julia-actions/cache@v2
       - name: Format check
         run: |
           julia -e '
