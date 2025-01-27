@@ -23,7 +23,7 @@ Uses [Documenter](https://github.com/JuliaDocs/Documenter.jl) to test if documen
 * Options:
   * `use_FuseRegistry`: If set to `true`, `FuseRegistry` will be added and used for installing packages. Default is `true`.
 
-### 4. **TEST**
+### 4. **Test**
 Uses  [https://github.com/julia-actions/julia-runtest](https://github.com/julia-actions/julia-runtest) to run `test/runtests.jl`
 * Typically used with PR and push to `master` and `dev`.
 * Good to set path specifier to reduce triggering to only `src/**`, `test/**`, and `Project.toml` changes.
@@ -45,6 +45,9 @@ Uses  [https://github.com/julia-actions/julia-runtest](https://github.com/julia-
 
 ### 5. **Register updated version with Julia Registry**
 Uses [https://github.com/peter-evans/commit-comment](https://github.com/peter-evans/commit-comment) to add `@JuliaRegistrator register()` comment to the commit that causes a change in version number in root directory's `Project.toml` file.
+
+### 6. **Julia Tag Bot**
+Uses [https://github.com/JuliaRegistries/TagBot](https://github.com/JuliaRegistries/TagBot) to automatically create a release tag for the registered version of your package at Julia registry. Please ensure to copy the sample file for this workflow to make sure it works. This action requires the text `JuliaRegistries/TagBot` somewhere in the calling action file.
 
 ## Samples
 
