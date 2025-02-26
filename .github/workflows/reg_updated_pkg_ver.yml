@@ -19,4 +19,9 @@ jobs:
           if: steps.check.outcome != 'failure'
           uses: peter-evans/commit-comment@v3
           with:
-            body: "@JuliaRegistrator register()"
+            body: |
+              @JuliaRegistrator register()
+
+              Release notes:
+              
+              ${{ github.event.head_commit.message }}
