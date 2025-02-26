@@ -64,8 +64,12 @@ jobs:
           version: 3.58.0
       - name: DVC Pull
         if: ${{ inputs.use_dvc }}
-        run: |
-          dvc pull
+        uses: nick-fields/retry@v3
+        with:
+          command: dvc pull
+          max_attempts: 5
+          retry_wait_seconds: 30
+          timeout_minutes: 30
       - uses: julia-actions/cache@v2
       - name: "Add the FuseRegistry via Git"
         if: ${{ inputs.use_FuseRegistry }}
