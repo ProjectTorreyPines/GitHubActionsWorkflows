@@ -37,9 +37,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        julia-version: [1.x]
+        julia-version: [1.11.3, 1.x]
         julia-arch: [x64]
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macOS-latest]
     steps:
       - uses: julia-actions/setup-julia@latest
         with:
