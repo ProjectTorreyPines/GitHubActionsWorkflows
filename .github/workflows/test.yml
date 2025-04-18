@@ -80,7 +80,7 @@ jobs:
         if: ${{ inputs.upload_artifact }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.artifact_name }}
+          name: "${{ inputs.artifact_name }}_${{ matrix.os }}_${{ matrix.julia-version }}"
           path: ${{ inputs.artifact_path }}
       - name: 'Process Coverage'
         if: ${{ inputs.use_coverage }}
