@@ -5,7 +5,7 @@ on:
     branches: ["master"]
 
 jobs:
-  test:
+  release_artifacts:
     uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/artifact_release.yml@master
     secrets: inherit
     with:

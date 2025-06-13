@@ -8,10 +8,6 @@ on:
         required: false
         default: "data"
         type: string
-      RELEASE_TAG:
-        required: true
-        type: string
-
 jobs:
   release:
     runs-on: ubuntu-latest
