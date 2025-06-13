@@ -1,0 +1,105 @@
+name: Release Data
+
+
+on:
+  workflow_call:
+    inputs:
+      data_path:
+        required: false
+        default: "data"
+        type: string
+      RELEASE_TAG:
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
+      - name: Set version (based on date or commit)
+        run: echo "RELEASE_TAG=v$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Create archive of data folder
+        run: |
+          mkdir dist
+          # Create reproducible tar of just the data folder
+          tar --sort=name --owner=0 --group=0 --numeric-owner --mtime='2000-01-01' \
+              -czf dist/${{ inputs.data_path }}.tar.gz ${{ inputs.data_path }}/
+
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: '1.10'
+
+      - name: Compute hashes
+        run: |
+          # Install required Julia packages
+          julia -e 'using Pkg; Pkg.add(["Tar", "CodecZlib", "SHA"])'
+          
+          # Compute both hashes
+          julia -e '
+          using Tar, CodecZlib, SHA
+          using Pkg
+          
+          # Read the tarball
+          tarball_data = read("dist/${{ inputs.data_path }}.tar.gz")
+          
+          # Compute SHA256 of the tarball itself
+          tarball_sha = bytes2hex(sha256(tarball_data))
+          
+          # Decompress and compute git-tree-sha1 of contents
+          decompressed = transcode(GzipDecompressor, tarball_data)
+          
+          # Debug: Check what files are in the tar
+          println("Files in tarball:")
+          Tar.list(IOBuffer(decompressed)) do hdr
+              println("  $(hdr.path) (type: $(hdr.type), size: $(hdr.size))")
+          end
+          
+          # Extract to temp directory and compute hash properly
+          temp_dir = mktempdir()
+          final_tree_sha = ""
+          try
+              Tar.extract(IOBuffer(decompressed), temp_dir)
+              
+              # Compute git-tree-sha1 using GitTools
+              tree_sha_bytes = Pkg.GitTools.tree_hash(temp_dir)
+              global final_tree_sha = bytes2hex(tree_sha_bytes)
+              
+              println("Computed git-tree-sha1: $final_tree_sha")
+          finally
+              rm(temp_dir, recursive=true)
+          end
+          
+          # Create the artifact info in TOML format
+          artifact_toml = """
+          [data]
+          git-tree-sha1 = "$final_tree_sha"
+          
+          [[data.download]]
+          url = "https://github.com/${{ github.repository }}/releases/download/${{ env.RELEASE_TAG }}/${{ inputs.data_path }}.tar.gz"
+          sha256 = "$tarball_sha"
+          lazy = true
+          """
+          
+          write("dist/Artifacts.toml", artifact_toml)
+          '
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: "Automated release ${{ env.RELEASE_TAG }}"
+          files: |
+            dist/${{ inputs.data_path }}.tar.gz
+            dist/Artifacts.toml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Output computed hashes
+        run: |
+          echo "Generated Artifacts.toml:"
+          cat dist/Artifacts.toml
