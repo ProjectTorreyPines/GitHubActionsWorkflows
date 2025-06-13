@@ -3,18 +3,6 @@ name: Release Data
 on:
   push:
     branches: ["master"]
-    paths:
-      - '.github/workflows/test.yml'
-      - 'src/**'
-      - 'test/**'
-      - 'Project.toml'
-  pull_request:
-    branches: ["master"]
-    paths:
-      - '.github/workflows/test.yml'
-      - 'src/**'
-      - 'test/**'
-      - 'Project.toml'
 
 jobs:
   test:
