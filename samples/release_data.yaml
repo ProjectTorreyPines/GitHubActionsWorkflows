@@ -9,5 +9,4 @@ jobs:
     uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/artifact_release.yml@master
     secrets: inherit
     with:
-      RELEASE_TAG: ${{ env.RELEASE_TAG }}
       data_path: "data"

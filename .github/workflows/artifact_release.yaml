@@ -80,7 +80,7 @@ jobs:
           git-tree-sha1 = "$final_tree_sha"
           
           [[data.download]]
-          url = "https://github.com/${{ github.repository }}/releases/download/${{ inputs.RELEASE_TAG }}/${{ inputs.data_path }}.tar.gz"
+          url = "https://github.com/${{ github.repository }}/releases/download/${{ env.RELEASE_TAG }}/${{ inputs.data_path }}.tar.gz"
           sha256 = "$tarball_sha"
           lazy = true
           """
@@ -91,8 +91,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.RELEASE_TAG }}
-          name: "Automated release ${{ inputs.RELEASE_TAG }}"
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: "Automated release ${{ env.RELEASE_TAG }}"
           files: |
             dist/${{ inputs.data_path }}.tar.gz
             dist/Artifacts.toml
