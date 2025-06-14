@@ -1,5 +1,6 @@
 name: Make Docs
 on:
+  workflow_dispatch:  # Manually trigger
   push:
     branches: ["master", "dev"]
     paths:

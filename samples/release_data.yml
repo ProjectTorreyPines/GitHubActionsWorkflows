@@ -1,6 +1,7 @@
 name: Release Data
 
 on:
+  workflow_dispatch:  # Manually trigger
   push:
     branches: ["master"]
 
