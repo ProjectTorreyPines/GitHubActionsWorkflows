@@ -15,7 +15,7 @@ on:
 jobs:
   test_on_IMASggd:
     name: Testing test.yml on IMASggd
-    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml@master
     secrets: inherit
     with:
       target_repo: ProjectTorreyPines/IMASggd.jl
@@ -23,7 +23,7 @@ jobs:
       ref: master
   test_on_SOLPS2imas:
     name: Testing test.yml on SOLPS2imas
-    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml@master
     secrets: inherit
     with:
       target_repo: ProjectTorreyPines/SOLPS2imas.jl
@@ -31,7 +31,7 @@ jobs:
       ref: master
   test_on_FusionSyntheticDiagnostics:
     name: Testing test.yml on FusionSyntheticDiagnostics
-    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml@master
     secrets: inherit
     with:
       target_repo: ProjectTorreyPines/FusionSyntheticDiagnostics.jl
