@@ -1,0 +1,39 @@
+name: Test Reusable Workflow Make Docs
+on:
+  workflow_dispatch:  # Manually trigger
+  push:
+    branches: master
+    paths:
+      - '.github/workflows/make_docs.yml'
+      - '.github/workflows/test_make_docs.yml'
+  pull_request:
+    branches: master
+    paths:
+      - '.github/workflows/make_docs.yml'
+      - '.github/workflows/test_make_docs.yml'
+
+jobs:
+  test_on_IMASggd:
+    name: Testing make_docs.yml on IMASggd
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml
+    secrets: inherit
+    with:
+      target_repo: ProjectTorreyPines/IMASggd.jl
+      workflow_file: make_docs.yml
+      ref: master
+  test_on_SOLPS2imas:
+    name: Testing make_docs.yml on SOLPS2imas
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml
+    secrets: inherit
+    with:
+      target_repo: ProjectTorreyPines/SOLPS2imas.jl
+      workflow_file: make_docs.yml
+      ref: master
+  test_on_FusionSyntheticDiagnostics:
+    name: Testing make_docs.yml on FusionSyntheticDiagnostics
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml
+    secrets: inherit
+    with:
+      target_repo: ProjectTorreyPines/FusionSyntheticDiagnostics.jl
+      workflow_file: make_docs.yml
+      ref: master

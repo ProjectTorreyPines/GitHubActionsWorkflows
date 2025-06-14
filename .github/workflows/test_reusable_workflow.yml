@@ -1,0 +1,151 @@
+name: Test Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      target_repo:
+        description: 'Target repository in owner/repo format (e.g., octocat/hello-world)'
+        required: true
+        type: string
+
+      workflow_file:
+        description: 'Workflow file name in the target repo (e.g., deploy.yml)'
+        required: true
+        type: string
+
+      ref:
+        description: 'Git ref (branch, tag, or commit SHA) to run the workflow on'
+        required: true
+        type: string
+
+      use_pat:
+        description: 'Whether to use PAT instead of GITHUB_TOKEN'
+        required: false
+        default: false
+        type: boolean
+
+      wait_timeout_seconds:
+        description: 'Max seconds to wait for the workflow run to start'
+        required: false
+        default: '300'
+        type: string
+
+      run_timeout_seconds:
+        description: 'Max seconds to wait for the workflow run to complete'
+        required: false
+        default: '3600'
+        type: string
+
+      poll_frequency_seconds:
+        description: 'How often (in seconds) to poll for workflow status'
+        required: false
+        default: '10'
+        type: string
+
+    secrets:
+      PAT:
+        description: 'Personal Access Token for cross-repo workflow dispatch (optional)'
+        required: false
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Target Workflow
+
+        run: |
+          echo "Triggering ${{ inputs.workflow_file }} in ${{ inputs.target_repo }} on ref ${{ inputs.ref }}..."
+          export TRIGGER_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "TRIGGER_TIME=$TRIGGER_TIME" >> $GITHUB_ENV
+
+          curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PAT }}" \
+            https://api.github.com/repos/${{ inputs.target_repo }}/actions/workflows/${{ inputs.workflow_file }}/dispatches \
+            -d "{\"ref\":\"${{ inputs.ref }}\"}" | grep -q 204
+
+      - name: Wait for Workflow Run
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+          WAIT_TIMEOUT: ${{ inputs.wait_timeout_seconds }}
+          RUN_TIMEOUT: ${{ inputs.run_timeout_seconds }}
+          POLL_FREQ: ${{ inputs.poll_frequency_seconds }}
+          TARGET_REPO: ${{ inputs.target_repo }}
+          WORKFLOW_FILE: ${{ inputs.workflow_file }}
+          REF: ${{ inputs.ref }}
+        run: |
+          OWNER=$(echo "$TARGET_REPO" | cut -d'/' -f1)
+          REPO=$(echo "$TARGET_REPO" | cut -d'/' -f2)
+
+          echo "Waiting up to $WAIT_TIMEOUT seconds for workflow run to appear..."
+
+          WAIT_ITER=$((WAIT_TIMEOUT / POLL_FREQ))
+          sleep 3 # Sleep for a while to get the new workflow started
+          for ((i=0; i<WAIT_ITER; i++)); do
+            set +e
+
+            RESPONSE=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+                "https://api.github.com/repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_FILE/runs?branch=$REF&event=workflow_dispatch")
+
+            RUN_ID=$(echo "$RESPONSE" | jq -r --arg trigger_time "$TRIGGER_TIME" '
+            if (.workflow_runs | type == "array") then
+                .workflow_runs
+                | map(select(.created_at > $trigger_time))
+                | sort_by(.created_at)
+                | last
+                | .id
+            else empty end')
+            set -e
+
+            if [[ "$RUN_ID" != "null" && -n "$RUN_ID" ]]; then
+                echo "✅ Found workflow run ID: $RUN_ID"
+                break
+            fi
+
+            TOTAL_WAIT=$((i * POLL_FREQ))
+
+            echo "⏳ Waiting for workflow run... (${TOTAL_WAIT}s)"
+            sleep $POLL_FREQ
+          done
+
+          if [[ -z "$RUN_ID" || "$RUN_ID" == "null" ]]; then
+            echo "❌ Workflow run did not start in time"
+            exit 1
+          fi
+
+          echo "Polling workflow run status for up to $RUN_TIMEOUT seconds..."
+
+          # Poll until run completes
+          RUN_ITER=$((RUN_TIMEOUT / POLL_FREQ))
+          for ((i=0; i<RUN_ITER; i++)); do
+          # Temporarily disable exit-on-error
+          set +e
+
+          RESPONSE=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+                          "https://api.github.com/repos/$OWNER/$REPO/actions/runs/$RUN_ID")
+
+          STATUS=$(echo "$RESPONSE" | jq -r '.status' 2>/dev/null)
+          CONCLUSION=$(echo "$RESPONSE" | jq -r '.conclusion' 2>/dev/null)
+
+          set -e
+
+          if [[ "$STATUS" == "completed" ]]; then
+              echo "🎯 Workflow completed with conclusion: $CONCLUSION"
+
+              if [[ "$CONCLUSION" == "success" ]]; then
+              exit 0
+          else
+              exit 1
+          fi
+          elif [[ -z "$STATUS" || "$STATUS" == "null" ]]; then
+              echo "⚠️ Warning: Could not get workflow status. Retry in $POLL_FREQ sec..."
+          else
+              echo "⏳ Still running ($STATUS)..."
+          fi
+
+          sleep $POLL_FREQ
+          done
+
+          echo "❌ Workflow run did not complete in allotted time."
+          exit 1

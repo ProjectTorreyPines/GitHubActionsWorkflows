@@ -1,0 +1,39 @@
+name: Test Reusable Workflow Test
+on:
+  workflow_dispatch:  # Manually trigger
+  push:
+    branches: master
+    paths:
+      - '.github/workflows/test.yml'
+      - '.github/workflows/test_test.yml'
+  pull_request:
+    branches: master
+    paths:
+      - '.github/workflows/test.yml'
+      - '.github/workflows/test_test.yml'
+
+jobs:
+  test_on_IMASggd:
+    name: Testing test.yml on IMASggd
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml
+    secrets: inherit
+    with:
+      target_repo: ProjectTorreyPines/IMASggd.jl
+      workflow_file: test.yml
+      ref: master
+  test_on_SOLPS2imas:
+    name: Testing test.yml on SOLPS2imas
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml
+    secrets: inherit
+    with:
+      target_repo: ProjectTorreyPines/SOLPS2imas.jl
+      workflow_file: test.yml
+      ref: master
+  test_on_FusionSyntheticDiagnostics:
+    name: Testing test.yml on FusionSyntheticDiagnostics
+    uses: ProjectTorreyPines/GitHubActionsWorkflows/.github/workflows/test_reusable_workflow.yml
+    secrets: inherit
+    with:
+      target_repo: ProjectTorreyPines/FusionSyntheticDiagnostics.jl
+      workflow_file: test.yml
+      ref: master
