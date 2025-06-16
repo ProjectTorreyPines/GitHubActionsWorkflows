@@ -12,11 +12,15 @@ Installs compat helper which checks for updates in dependencies based on compat 
   * `use_FuseRegistry`: If set to `true`, `FuseRegistry` will be added and used for installing packages. Default is `true`.
 
 ### 2. **Format Check**
+[![Format Check Test](https://github.com/ProjectTorreyPines/GitHubActionsWorkflows/actions/workflows/test_format_check.yml/badge.svg)](https://github.com/ProjectTorreyPines/GitHubActionsWorkflows/actions/workflows/test_format_check.yml)
+
 Uses [JuliaFormatter](https://github.com/domluna/JuliaFormatter.jl) to check if the julia files conform with `.JuliaFormatter.toml` configuration in a repo.
 * Typically used with PR and push to `master` and `dev`.
 * Good to set path specifier to reduce triggering to only `.jl` changes.
 
 ### 3. **Documentation**
+[![Make Docs Test](https://github.com/ProjectTorreyPines/GitHubActionsWorkflows/actions/workflows/test_make_docs.yml/badge.svg)](https://github.com/ProjectTorreyPines/GitHubActionsWorkflows/actions/workflows/test_make_docs.yml)
+
 Uses [Documenter](https://github.com/JuliaDocs/Documenter.jl) to test if documentation making is working fine and deploys documentation based on `docs/make.jl` settings.
 * Typically used with PR and push to `master` and `dev`.
 * Good to set path specifier to reduce triggering to only `src/**` and `docs/**` changes.
@@ -24,6 +28,8 @@ Uses [Documenter](https://github.com/JuliaDocs/Documenter.jl) to test if documen
   * `use_FuseRegistry`: If set to `true`, `FuseRegistry` will be added and used for installing packages. Default is `true`.
 
 ### 4. **Test**
+[![Test Test](https://github.com/ProjectTorreyPines/GitHubActionsWorkflows/actions/workflows/test_test.yml/badge.svg)](https://github.com/ProjectTorreyPines/GitHubActionsWorkflows/actions/workflows/test_test.yml)
+
 Uses  [https://github.com/julia-actions/julia-runtest](https://github.com/julia-actions/julia-runtest) to run `test/runtests.jl`
 * Typically used with PR and push to `master` and `dev`.
 * Good to set path specifier to reduce triggering to only `src/**`, `test/**`, and `Project.toml` changes.
