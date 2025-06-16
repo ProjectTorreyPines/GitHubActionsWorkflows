@@ -14,7 +14,6 @@ on:
       - '.github/workflows/make_docs.yml'
       - 'src/**'
       - 'docs/**'
-  workflow_dispatch:
     
 jobs:
   make_docs:
