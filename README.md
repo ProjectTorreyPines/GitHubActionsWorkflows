@@ -61,9 +61,13 @@ You can copy workflow files from [samples](https://github.com/ProjectTorreyPines
 
 ## Badges
 
-It is fun to decorate your README page to show that all CIs are running fine in the master branch. Add following raw code to the top of your repo's `README.md`:
-```
-![Format Check](https://github.com/ProjectTorreyPines/repo_name/actions/workflows/format_check.yml/badge.svg)
-![Docs](https://github.com/ProjectTorreyPines/repo_name/actions/workflows/make_docs.yml/badge.svg)
-![Tests](https://github.com/ProjectTorreyPines/repo_name/actions/workflows/test.yml/badge.svg)
+It is fun to decorate your README page to show that all CIs are running fine in the master branch. Add following raw code to the top of your repo's `README.md` and creplace `<repo_name>` with the name of your repo:
+```yaml
+[![CompatHelper](https://github.com/ProjectTorreyPines/<repo_name>/actions/workflows/compat_helper.yml/badge.svg)](https://github.com/ProjectTorreyPines/<repo_name>/actions/workflows/compat_helper.yml)
+
+[![Format Check](https://github.com/ProjectTorreyPines/<repo_name>/actions/workflows/format_check.yml/badge.svg)](https://github.com/ProjectTorreyPines/<repo_name>/actions/workflows/format_check.yml)
+
+[![Make Docs](https://github.com/ProjectTorreyPines/<repo_name>/actions/workflows/make_docs.yml/badge.svg)](https://github.com/ProjectTorreyPines/<repo_name>/actions/workflows/make_docs.yml)
+
+[![Test](https://github.com/ProjectTorreyPines/<repo_name>/actions/workflows/test.yml/badge.svg)](https://github.com/ProjectTorreyPines/<repo_name>/actions/workflows/test.yml)
 ```
